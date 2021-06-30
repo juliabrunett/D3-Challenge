@@ -81,6 +81,20 @@ d3.csv("./data/data.csv").then(censusData => {
         .attr("r", "15")
         .attr("fill", "blue")
         .attr("opacity", ".4")
+        // .append("text")
+        // .text(d => d.abbr)
+        // .attr("x", d => xLinearScale(d.healthcare))
+        // .attr("y", d => yLinearScale(d.poverty))
+
+    chartGroup.selectAll("text")
+        .data(censusData)
+        .enter()
+        .append("text")
+        .text(d => d.abbr)
+        .attr("x", d => {
+            return xLinearScale(d.healthcare)})
+        .attr("y", d => {
+            return yLinearScale(d.poverty)})
 
     // Create tooltip
     var toolTip = d3.tip()
