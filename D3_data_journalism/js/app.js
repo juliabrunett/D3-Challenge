@@ -51,7 +51,7 @@ d3.csv("./data/data.csv").then(censusData => {
 
     // x scale: healthcare
     var xLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(censusData, d => d.healthcare)])
+        .domain([3, d3.max(censusData, d => d.healthcare)])
         .range([0, width]);
 
     // y scale: poverty
@@ -63,11 +63,12 @@ d3.csv("./data/data.csv").then(censusData => {
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
-    // Append group to chart group & create axes
+    // Append group to chart group & create bottom axes
     chartGroup.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
 
+    // Create left axis
     chartGroup.append("g")
         .call(leftAxis);
 
@@ -78,9 +79,11 @@ d3.csv("./data/data.csv").then(censusData => {
         .append("circle")
         .attr("cx", d => xLinearScale(d.healthcare))
         .attr("cy", d => yLinearScale(d.poverty))
-        .attr("r", "15")
-        .attr("fill", "blue")
-        .attr("opacity", ".4")
+        .attr("r", "20")
+        // .attr("fill", "blue")
+        // .attr("opacity", ".4");
+        .classed("stateCircle", true);
+
         // .append("text")
         // .text(d => d.abbr)
         // .attr("x", d => xLinearScale(d.healthcare))
@@ -91,18 +94,21 @@ d3.csv("./data/data.csv").then(censusData => {
         .enter()
         .append("text")
         .text(d => d.abbr)
-        .attr("x", d => {
-            return xLinearScale(d.healthcare)})
-        .attr("y", d => {
-            return yLinearScale(d.poverty)})
+        .attr("x", d => xLinearScale(d.healthcare))
+        .attr("y", d => yLinearScale(d.poverty))
+        .classed("stateText", true)
+        // .attr("text-anchor", "middle")
+        // .attr("font-size", "12px");
 
     // Create tooltip
     var toolTip = d3.tip()
-        .attr("class", "tooltip")
+        .attr("class", "d3-tip")
         .offset([80, -60])
         .html(data => {
             return (`${data.state}<br>Healthcare: ${data.healthcare}<br>Poverty: ${data.poverty}`);
         });
+    
+    // Call the tooltip
     chartGroup.call(toolTip);
 
     // Event listeners
@@ -128,5 +134,5 @@ d3.csv("./data/data.csv").then(censusData => {
         .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("class", "axisText")
         .text("Healthcare Rate");
-    })
+});
     
