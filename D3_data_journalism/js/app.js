@@ -7,7 +7,7 @@ var svgHeight = 600;
 var margin = {
     top: 20,
     right: 50,
-    bottom: 90,
+    bottom: 100,
     left: 100
 };
 
@@ -135,8 +135,8 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     else if (chosenXAxis === "smokes") {
         xLabel = "Smokes:";
     }
-    else if (chosenXAxis === "income") {
-        xLabel = "Income:";
+    else if (chosenXAxis === "obesity") {
+        xLabel = "Obesity:";
     };
 
     // change the y-axis labels in tooltip
@@ -146,8 +146,8 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     else if (chosenYAxis === "age") {
         yLabel = "Age:";
     }
-    else if (chosenYAxis === "obesity") {
-        yLabel = "Obesity:";
+    else if (chosenYAxis === "income") {
+        yLabel = "Income:";
     };
 
     console.log(xLabel);
@@ -159,7 +159,12 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
         .attr("class", "d3-tip")
         .offset([80, -60])
         .html(data => {
-            return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);
+            if (chosenYAxis === "poverty") {
+                return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);
+            }
+            else {
+                return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}`);
+            };
         });
 
     // Call the tooltip function above 
@@ -259,7 +264,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("dy", "1em")
         .attr("class", "axisText active")
         .attr("value", "poverty")
-        .text("Poverty Rate");
+        .text("Poverty Rate (%)");
 
     // Y axis title (part 2)
     var ageTitle = yTitlesGroup.append("text")
@@ -268,16 +273,16 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("dy", "1em")
         .attr("class", "axisText inactive")
         .attr("value", "age")
-        .text("Age");
+        .text("Age (Median)");
 
     // Y axis title (part 2)
-    var obesityTitle = yTitlesGroup.append("text")
+    var incomeTitle = yTitlesGroup.append("text")
     .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .attr("class", "axisText inactive")
-    .attr("value", "obesity")
-    .text("Obesity");
+    .attr("value", "income")
+    .text("Income Median");
 
     // X TITLES
     var xTitlesGroup = chartGroup.append("g")
@@ -289,7 +294,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("y", 0)
         .attr("value", "healthcare")
         .attr("class", "axisText active")
-        .text("Healthcare Rate");
+        .text("Lacks Healthcare (%)");
 
     // X axis title (part 2)
     var smokesTitle = xTitlesGroup.append("text")
@@ -297,15 +302,15 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("y", 20)
         .attr("value", "smokes")
         .attr("class", "axisText inactive")
-        .text("Smokes");
+        .text("Smokes (%)");
 
     // X axis title (part 2)
-    var incomeTitle = xTitlesGroup.append("text")
+    var obesityTitle = xTitlesGroup.append("text")
         .attr("x", 0)
         .attr("y", 40)
-        .attr("value", "income")
+        .attr("value", "obesity")
         .attr("class", "axisText inactive")
-        .text("Income");
+        .text("Obesity (%)");
 
     // CREATE the tooltip on the graph (initializes)
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -348,7 +353,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             smokesTitle
             .classed("active", false)
             .classed("inactive", true);
-            incomeTitle
+            obesityTitle
             .classed("active", false)
             .classed("inactive", true);
         }
@@ -359,18 +364,18 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             smokesTitle
             .classed("active", true)
             .classed("inactive", false);
-            incomeTitle
+            obesityTitle
             .classed("active", false)
             .classed("inactive", true);
         }
-        else if (chosenXAxis === "income") {
+        else if (chosenXAxis === "obesity") {
             healthcareTitle
             .classed("active", false)
             .classed("inactive", true);
             smokesTitle
             .classed("active", false)
             .classed("inactive", true);
-            incomeTitle
+            obesityTitle
             .classed("active", true)
             .classed("inactive", false);
         };
@@ -415,7 +420,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
                 ageTitle
                 .classed("active", false)
                 .classed("inactive", true);
-                obesityTitle
+                incomeTitle
                 .classed("active", false)
                 .classed("inactive", true);
             }
@@ -426,18 +431,18 @@ d3.csv("./data/data.csv").then((censusData, err) => {
                 ageTitle
                 .classed("active", true)
                 .classed("inactive", false);
-                obesityTitle
+                incomeTitle
                 .classed("active", false)
                 .classed("inactive", true);
             }
-            else if (chosenYAxis === "obesity") {
+            else if (chosenYAxis === "income") {
                 povertyTitle
                 .classed("active", false)
                 .classed("inactive", true);
                 ageTitle
                 .classed("active", false)
                 .classed("inactive", true);
-                obesityTitle
+                incomeTitle
                 .classed("active", true)
                 .classed("inactive",false);
             };
