@@ -7,7 +7,7 @@ var svgHeight = 600;
 var margin = {
     top: 20,
     right: 50,
-    bottom: 70,
+    bottom: 90,
     left: 100
 };
 
@@ -156,17 +156,17 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     // Draw the tooltip
     var toolTip = d3.tip()
         // .data(censusData)
-        .attr("class", "d3-tooltip")
+        .attr("class", "d3-tip")
         .offset([80, -60])
         .html(data => {
-            return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}<br>${yLabel} ${data[chosenYAxis]}`);
+            return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);
         });
 
     // Call the tooltip function above 
-    chartGroup.call(toolTip);
+    circlesGroup.call(toolTip);
 
     // Event Listeners
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
         toolTip.show(data, this);})
         .on("mouseout", function(data, index) {
         toolTip.hide(data); });
@@ -246,14 +246,6 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis]))
         .classed("stateText circle-label", true);
-
-
-    // function countStateLabels(censusData) {
-    //     for (var i = 0; i < 51; i++) {
-    //         console.log(i+1, censusData[i]["abbr"]);
-    //     };
-    // };
-    // countStateLabels(censusData);
     
     // X & Y AXIS TITLES
     // Y TITLES
@@ -289,7 +281,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // X TITLES
     var xTitlesGroup = chartGroup.append("g")
-        .attr("transform", `translate(${width / 2}, ${height + margin.top + 10})`);
+        .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`);
 
     // X axis title
     var healthcareTitle = xTitlesGroup.append("text")
