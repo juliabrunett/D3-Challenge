@@ -103,21 +103,21 @@ function updateYCircles(circlesGroup, newYScale, chosenYAxis) {
 };
 
 // Update circle labels
-function updateXCircleLabels(circlesGroup, newXScale, chosenXAxis) {
-    circlesGroup.transition()
+function updateXCircleLabels(circlesLabels, newXScale, chosenXAxis) {
+    circlesLabels.transition()
         .duration(1000)
         .attr("x", d => newXScale(d[chosenXAxis]));
 
-    return circlesGroup;
+    return circlesLabels;
 };
 
 // Update circle labels
-function updateYCircleLabels(circlesGroup, newYScale, chosenYAxis) {
-    circlesGroup.transition()
+function updateYCircleLabels(circlesLabels, newYScale, chosenYAxis) {
+    circlesLabels.transition()
         .duration(1000)
         .attr("y", d => newYScale(d[chosenYAxis]));
 
-    return circlesGroup;
+    return circlesLabels;
 };
 
 // Function to update the tooltip
@@ -135,7 +135,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     else if (chosenXAxis === "smokes") {
         xLabel = "Smokes:";
     }
-    else {
+    else if (chosenXAxis === "income") {
         xLabel = "Income:";
     };
 
@@ -146,10 +146,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     else if (chosenYAxis === "age") {
         yLabel = "Age:";
     }
-    else {
+    else if (chosenYAxis === "obesity") {
         yLabel = "Obesity:";
     };
 
+    console.log(xLabel);
+    console.log(yLabel);
+
+    // Draw the tooltip
     var toolTip = d3.tip()
         // .data(censusData)
         .attr("class", "d3-tooltip")
@@ -158,12 +162,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
             return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}<br>${yLabel} ${data[chosenYAxis]}`);
         });
 
+    // Call the tooltip function above 
     chartGroup.call(toolTip);
 
-    circlesGroup.on("mouseover", data => {
-        toolTip.show(data);})
-        .on("mouseout", (data, index) => {
-        toolTip.hide(data);});
+    // Event Listeners
+    circlesGroup.on("click", function(data) {
+        toolTip.show(data, this);})
+        .on("mouseout", function(data, index) {
+        toolTip.hide(data); });
 
     return circlesGroup;
 };
@@ -232,7 +238,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // CIRCLE LABELS
     // State circle labels
-    var circleLabels = chartGroup.selectAll("text")
+    var circlesLabels = chartGroup.selectAll("text")
         .data(censusData)
         .enter()
         .append("text")
@@ -249,8 +255,6 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     //     .html(data => {
     //         return (`${data.state}<br>Healthcare: ${data.healthcare}<br>Poverty: ${data.poverty}`);
     //     });
-
-    
 
     // Call the tooltip
     // chartGroup.call(toolTip);
@@ -328,14 +332,14 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .on("click", function() {
             
         // Select the value of the option selected
-        var value = d3.select(this).attr("value");
+        var xValue = d3.select(this).attr("value");
         
         // If the value chosen is not already selected
-        if (value !== chosenXAxis) {
+        if (xValue !== chosenXAxis) {
 
             // re-set chosen x-axis
-            chosenXAxis = value;
-            console.log(chosenXAxis);
+            chosenXAxis = xValue;
+            console.log("New X-Axis:", chosenXAxis);
 
         // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
         // updates x scale for new data
@@ -348,10 +352,10 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         circlesGroup = updateXCircles(circlesGroup, xLinearScale, chosenXAxis);
 
         // updates tooltips with new info
-        circlesGroup = updateToolTip(chosenXAxis, circlesGroup, chosenYAxis);
+        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // updates x-labels on circles
-        circlesGroup = updateXCircleLabels(chosenXAxis, xLinearScale, circleLabels);
+        circlesLabels = updateXCircleLabels(circlesLabels, xLinearScale, chosenXAxis);
 
       // changes classes to change bold text
         if (chosenXAxis === "healthcare") {
@@ -395,14 +399,14 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .on("click", function() {
             
         // Select the value of the option selected
-        var value = d3.select(this).attr("value");
+        var yValue = d3.select(this).attr("value");
 
         // If the value chosen is not already selected
-        if (value !== chosenYAxis) {
+        if (yValue !== chosenYAxis) {
 
             // re-set chosen y-axis
-            chosenYAxis = value;
-            console.log(chosenYAxis);
+            chosenYAxis = yValue;
+            console.log("New Y-Axis:", chosenYAxis);
 
             // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
             // updates x scale for new data
@@ -411,14 +415,14 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             // updates y axis with transition
             yAxis = updateYAxis(yLinearScale, yAxis);
 
-            // updates circles with new x values
+            // updates circles with new y values
             circlesGroup = updateYCircles(circlesGroup, yLinearScale, chosenYAxis);
 
             // updates tooltips with new info
-            circlesGroup = updateToolTip(chosenXAxis, circlesGroup, chosenYAxis);
+            circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
             // updates circle labels
-            circlesGroup = updateYCircleLabels(chosenYAxis, yLinearScale, circleLabels);
+            circlesLabels = updateYCircleLabels(circlesLabels, yLinearScale, chosenYAxis);
 
             // changes classes to change bold text
             if (chosenYAxis === "poverty") {
