@@ -16,6 +16,10 @@ body {
     border-radius: 0px;
 }
 
+.jumbotron h1 {
+    font-size: 50px;
+}
+
 #sub-title {
     background-color: #778da9;
     color: white;
@@ -27,6 +31,9 @@ body {
 }
 
 #article-location {
-
+    margin-top: 30px;
 }
-/* 1b263b */
+
+#article-location p {
+    font-size: 20px;
+}
