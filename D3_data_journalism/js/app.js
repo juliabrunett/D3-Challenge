@@ -8,7 +8,7 @@ var margin = {
     top: 30,
     right: 50,
     bottom: 110,
-    left: 100
+    left: 130
 };
 
 // Define widths and heights minus margins for inside of graph
@@ -25,7 +25,7 @@ var svg = d3.select("#scatter-plot")
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Initialize the chosen x-axis: healthcare & y-axis: poverty
+// Initialize the chosen x-axis: healthcare & y-axis: poverty (default)
 var chosenXAxis = "healthcare";
 var chosenYAxis = "poverty";
 
@@ -131,27 +131,33 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     // change the x-axis labels in tooltip
     if (chosenXAxis === "healthcare") {
         xLabel = "Healthcare:";
+        xTitle = "% Lacks Healthcare";
     }
     else if (chosenXAxis === "smokes") {
         xLabel = "Smokes:";
+        xTitle = "% Lacks Healthcare";
     }
     else if (chosenXAxis === "obesity") {
         xLabel = "Obesity:";
+        xTitle = "% Obese";
     };
 
     // change the y-axis labels in tooltip
     if (chosenYAxis === "poverty") {
         yLabel = "Poverty:";
+        xTitle = "% in Poverty";
     }
     else if (chosenYAxis === "age") {
         yLabel = "Age:";
+        xTitle = "Median Age";
     }
     else if (chosenYAxis === "income") {
         yLabel = "Income:";
+        yTitle = "Median Household Income";
     };
 
-    console.log(xLabel);
-    console.log(yLabel);
+    // console.log(xLabel);
+    // console.log(yLabel);
 
     // Draw the tooltip
     var toolTip = d3.tip()
@@ -181,8 +187,35 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
 // Update the title
 function updateTitle(chosenXAxis, chosenYAxis) {
+
+    // Define x & y title variables for chart title
+    var xTitle;
+    var yTitle;
+
+    // change the title by x-axis
+    if (chosenXAxis === "healthcare") {
+        xTitle = "% Lacks Healthcare";
+    }
+    else if (chosenXAxis === "smokes") {
+        xTitle = "% Smokes";
+    }
+    else if (chosenXAxis === "obesity") {
+        xTitle = "% Obese";
+    };
+
+    // change the title by y-axis
+    if (chosenYAxis === "poverty") {
+        yTitle = "% in Poverty";
+    }
+    else if (chosenYAxis === "age") {
+        yTitle = "Median Age";
+    }
+    else if (chosenYAxis === "income") {
+        yTitle = "Median Household Income";
+    };
+
     var chartTitle = chartGroup.selectAll(".chart-title")
-        .text(`${chosenXAxis} vs. ${chosenYAxis}`);
+        .text(`${xTitle} vs. ${yTitle} by State`);
     
     return chartTitle;
 };
@@ -237,8 +270,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     var chartTitle = chartGroup.append("text")
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2)) 
-        .classed("chart-title", true)
-        .text(`${chosenXAxis} vs. ${chosenYAxis}`);
+        .classed("chart-title", true);
+    
+    chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
     // Define circles group
     var circlesGroup = chartGroup.selectAll("circle")
@@ -268,7 +302,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // Y axis title
     var povertyTitle = yTitlesGroup.append("text")
-        .attr("y", 0 - margin.left + 40)
+        .attr("y", 0 - margin.left + 50)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .attr("class", "axisText active")
@@ -277,7 +311,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // Y axis title (part 2)
     var ageTitle = yTitlesGroup.append("text")
-        .attr("y", 0 - margin.left + 20)
+        .attr("y", 0 - margin.left + 30)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .attr("class", "axisText inactive")
@@ -286,12 +320,12 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // Y axis title (part 2)
     var incomeTitle = yTitlesGroup.append("text")
-    .attr("y", 0 - margin.left)
-    .attr("x", 0 - (height / 2))
-    .attr("dy", "1em")
-    .attr("class", "axisText inactive")
-    .attr("value", "income")
-    .text("Income Median");
+        .attr("y", 0 - margin.left + 10)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .attr("class", "axisText inactive")
+        .attr("value", "income")
+        .text("Household Income (Median)");
 
     // X TITLES
     var xTitlesGroup = chartGroup.append("g")
@@ -319,7 +353,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("y", 40)
         .attr("value", "obesity")
         .attr("class", "axisText inactive")
-        .text("Obesity (%)");
+        .text("Obese (%)");
 
     // CREATE the tooltip on the graph (initializes)
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -466,4 +500,4 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 }).catch(function(error) {
     console.log(error);
 });
-    
+

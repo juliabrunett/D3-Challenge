@@ -1,8 +1,9 @@
-/* .aText {
-    font-family: sans-serif;
+/* x & y-axis titles */
+.axisText {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 16px;
     text-anchor: middle;
-    } */
+}
 
 /* Active x & y-axis titles */
 .active {
@@ -37,12 +38,11 @@
 /* State circles */
 .stateCircle {
     fill: #415a77;
-    stroke: #e3e3e3;
+    stroke: #1b263b;
     opacity: 1;
 }
 
-/* 
-.chart {
+/* .chart {
     display: block;
     margin: 0;
 } */
@@ -63,9 +63,10 @@
 /* Chart Title */
 .chart-title {
     text-anchor: middle;  
-    font-size: 18px;
+    font-size: 20px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     text-transform: capitalize;
+    font-weight: bold;
 }
 
 
@@ -75,13 +76,20 @@
     display: none;
     }
 
-    /* .aText {
+    .axisText {
     font-size: 14px;
-    } */
+    }
+
+    .chart-title {
+        font-size: 18px;
+    }
 }
 
 @media screen and (max-width: 400px) {
-    /* .aText {
+    .axisText {
     font-size: 13px;
-    } */
+    }
+    .chart-title {
+        font-size: 17px;
+    }
 }

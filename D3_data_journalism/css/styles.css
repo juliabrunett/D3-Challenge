@@ -1,7 +1,32 @@
 #scatter-plot {
+    padding: 30px;
+    background-color: white;
+}
 
+/* Body */
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: #F7F8F2;
+}
+
+.jumbotron {
+    background-color: #415A77;
+    color: white;
+    margin-bottom: 0px;
+    border-radius: 0px;
+}
+
+#sub-title {
+    background-color: #778da9;
+    color: white;
+    padding: 30px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    text-align: center;
+    width: 80%;
 }
 
 #article-location {
 
 }
+/* 1b263b */
