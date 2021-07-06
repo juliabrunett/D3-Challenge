@@ -1,8 +1,50 @@
+function makeResponsive() {
+
+    var plotArea = d3.select("body").select("svg");
+
+    if (!plotArea.empty()) {
+        plotArea.remove();
+    };
+
+var currentWindowWidth = window.innerWidth;
+var currentWindowHeight = window.innerHeight;
+
+if (currentWindowHeight > 1000) {
+    var reduceHeight = 200;
+}
+else {
+    var reduceHeight = 100;
+};
+
+if (currentWindowWidth > 1300) {
+    var reduceWidth = 350;
+}
+else if (currentWindowWidth >= 1100 && currentWindowWidth <= 1299) {
+    var reduceWidth = 300;
+}
+else if (currentWindowWidth >= 900 && currentWindowWidth <= 1099) {
+    var reduceWidth = 250;
+}
+else if (currentWindowWidth >= 700 && currentWindowWidth <= 899) {
+    var reduceWidth = 200;
+}
+else if (currentWindowWidth >= 500 && currentWindowWidth <= 699) {
+    var reduceWidth = 150;
+}
+else if (currentWindowWidth >= 300 && currentWindowWidth <= 499) {
+    var reduceWidth = 100;
+};
+
+
 // LAYOUT OF GRAPH
 // Define height & width of svg (whole graph)
-var svgWidth = 960;
-var svgHeight = 600;
+// var svgWidth = 960;
+// var svgHeight = 600;
+var svgWidth = window.innerWidth - reduceWidth;
+var svgHeight = window.innerHeight - reduceHeight;
 
+console.log('Height', window.innerHeight);
+console.log('Width', window.innerWidth);
 // Define margins
 var margin = {
     top: 30,
@@ -500,4 +542,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 }).catch(function(error) {
     console.log(error);
 });
+};
 
+makeResponsive();
+
+// Responsive window function
+d3.select(window).on("resize", makeResponsive);
