@@ -35,7 +35,7 @@ function xScale(censusData, chosenXAxis) {
 
     // re-create scales
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(censusData, d => d[chosenXAxis]) * 0.7,
+        .domain([d3.min(censusData, d => d[chosenXAxis]) * 0.9,
                 d3.max(censusData, d => d[chosenXAxis]) * 1.1 ])
         .range([0, width]);
     
@@ -47,7 +47,7 @@ function yScale(censusData, chosenYAxis) {
 
     // re-create scales
     var yLinearScale = d3.scaleLinear()
-        .domain([d3.min(censusData, d => d[chosenYAxis]) * 0.7,
+        .domain([d3.min(censusData, d => d[chosenYAxis]) * 0.9,
                 d3.max(censusData, d => d[chosenYAxis]) * 1.1 ])
         .range([height, 0]);
     
@@ -115,7 +115,7 @@ function updateXCircleLabels(circlesLabels, newXScale, chosenXAxis) {
 function updateYCircleLabels(circlesLabels, newYScale, chosenYAxis) {
     circlesLabels.transition()
         .duration(1000)
-        .attr("y", d => newYScale(d[chosenYAxis]));
+        .attr("y", d => newYScale(d[chosenYAxis]) + 3);
 
     return circlesLabels;
 };
@@ -238,7 +238,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 15)
+        .attr("r", 11)
         .classed("stateCircle", true);
 
     // CIRCLE LABELS
@@ -249,7 +249,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .append("text")
         .text(d => d.abbr)
         .attr("x", d => xLinearScale(d[chosenXAxis]))
-        .attr("y", d => yLinearScale(d[chosenYAxis]))
+        .attr("y", d => yLinearScale(d[chosenYAxis]) + 3)
         .classed("stateText circle-label", true);
     
     // X & Y AXIS TITLES
