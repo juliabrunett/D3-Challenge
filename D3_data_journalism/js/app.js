@@ -5,9 +5,9 @@ var svgHeight = 600;
 
 // Define margins
 var margin = {
-    top: 20,
+    top: 30,
     right: 50,
-    bottom: 100,
+    bottom: 110,
     left: 100
 };
 
@@ -178,6 +178,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
     return circlesGroup;
 };
+
+// Update the title
+function updateTitle(chosenXAxis, chosenYAxis) {
+    var chartTitle = chartGroup.selectAll(".chart-title")
+        .text(`${chosenXAxis} vs. ${chosenYAxis}`);
+    
+    return chartTitle;
+};
         
 // Import data from csv
 d3.csv("./data/data.csv").then((censusData, err) => {
@@ -208,15 +216,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
     // x scale: healthcare
     var xLinearScale = xScale(censusData, chosenXAxis);
-    // var xLinearScale = d3.scaleLinear()
-        // .domain([3, d3.max(censusData, d => d.healthcare)])
-        // .range([0, width]);
 
     // y scale: poverty
     var yLinearScale = yScale(censusData, chosenYAxis);
-    // var yLinearScale = d3.scaleLinear()
-    //     .domain([7, d3.max(censusData, d => d.poverty)])
-    //     .range([height, 0]);
 
     // Define graph axes
     var bottomAxis = d3.axisBottom(xLinearScale);
@@ -230,6 +232,13 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     // Create Y axis
     var yAxis = chartGroup.append("g")
         .call(leftAxis);
+
+    // Create chart title
+    var chartTitle = chartGroup.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2)) 
+        .classed("chart-title", true)
+        .text(`${chosenXAxis} vs. ${chosenYAxis}`);
 
     // Define circles group
     var circlesGroup = chartGroup.selectAll("circle")
@@ -345,6 +354,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         // updates x-labels on circles
         circlesLabels = updateXCircleLabels(circlesLabels, xLinearScale, chosenXAxis);
 
+        // updates chart title
+        chartTitle = updateTitle(chosenXAxis, chosenYAxis);
+
       // changes classes to change bold text
         if (chosenXAxis === "healthcare") {
             healthcareTitle
@@ -411,6 +423,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
             // updates circle labels
             circlesLabels = updateYCircleLabels(circlesLabels, yLinearScale, chosenYAxis);
+
+            // updates chart title
+            chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
             // changes classes to change bold text when new option is selected
             if (chosenYAxis === "poverty") {
