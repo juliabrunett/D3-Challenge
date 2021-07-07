@@ -376,14 +376,33 @@ function updateRSquared(censusData, chosenXAxis, chosenYAxis) {
         r_strength = "Moderate";
     }
     else if (Math.abs(r_value) > 0.3 && Math.abs(r_value) <= 0.5) {
-        r_strength = "Weak"
+        r_strength = "Weak";
     }
     else {
-        r_strength = "No correlation"
+        r_strength = "No correlation";
     }
     // Append new r-squared value
     return (`R-Squared: ${r_value}<br>Strength: ${r_strength}`);
 };
+
+function colorRSquared(censusData, chosenXAxis, chosenYAxis) {
+    var r_value = findR(censusData, chosenXAxis, chosenYAxis);
+
+    if (Math.abs(r_value) > 0.7) {
+        color = "green";
+    }
+    else if (Math.abs(r_value) > 0.5 && Math.abs(r_value) <= 0.7) {
+        color = "orange";
+    }
+    else if (Math.abs(r_value) > 0.3 && Math.abs(r_value) <= 0.5) {
+        color = "yellow";
+    }
+    else {
+        color = "red";
+    }
+
+    return color;
+}
 
 // Import data from csv
 d3.csv("./data/data.csv").then((censusData, err) => {
@@ -525,11 +544,39 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
     // Append r-squared on page
-    var r_location = d3.select("#r-squared-location").append("p").classed("r-value", true);
+    var r_location = d3.select("#r-squared-location").append("p");
+    var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
 
     // Initialize page with r-squared
     if (repeat_count === 0) {
         r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+        
+        if (color === "green") {
+            r_location.classed("color-green", true);
+            r_location.classed("color-orange", false);
+            r_location.classed("color-yellow", false);
+            r_location.classed("color-red", false);
+        }
+        else if (color === "orange") {
+            r_location.classed("color-green", false);
+            r_location.classed("color-orange", true);
+            r_location.classed("color-yellow", false);
+            r_location.classed("color-red", false);
+
+        }
+        else if (color === "yellow") {
+            r_location.classed("color-green", false);
+            r_location.classed("color-orange", false);
+            r_location.classed("color-yellow", true);
+            r_location.classed("color-red", false);
+        } 
+        else if (color === "red") {
+            r_location.classed("color-green", false);
+            r_location.classed("color-orange", false);
+            r_location.classed("color-yellow", false);
+            r_location.classed("color-red", true);
+        }
+        // r_location.classed(color, true);
         repeat_count +=1;
     };
 
@@ -569,13 +616,37 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
             // Calculate r-squared value
-            // findR(censusData, chosenXAxis, chosenYAxis);
-            // r_location.html("");
-            // r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
-
             if (repeat_count === 0) {
+                var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
+
                 r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
                 repeat_count +=1;
+
+                if (color === "green") {
+                    r_location.classed("color-green", true);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", false);
+                }
+                else if (color === "orange") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", true);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", false);
+        
+                }
+                else if (color === "yellow") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", true);
+                    r_location.classed("color-red", false);
+                } 
+                else if (color === "red") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", true);
+                }
             };
 
             // changes classes to change bold text
@@ -626,7 +697,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         if (yValue !== chosenYAxis) {
 
             var repeat_count = 0;
-            
+
             // re-set chosen y-axis
             chosenYAxis = yValue;
             console.log("New Y-Axis:", chosenYAxis);
@@ -651,13 +722,37 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
             // Calculate r-squared value
-            // findR(censusData, chosenXAxis, chosenYAxis);
-            // r_location.html("");
-            // r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
-
             if (repeat_count === 0) {
+                var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
+                
                 r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
                 repeat_count +=1;
+
+                if (color === "green") {
+                    r_location.classed("color-green", true);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", false);
+                }
+                else if (color === "orange") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", true);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", false);
+        
+                }
+                else if (color === "yellow") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", true);
+                    r_location.classed("color-red", false);
+                } 
+                else if (color === "red") {
+                    r_location.classed("color-green", false);
+                    r_location.classed("color-orange", false);
+                    r_location.classed("color-yellow", false);
+                    r_location.classed("color-red", true);
+                }
             };
             
             // changes classes to change bold text when new option is selected

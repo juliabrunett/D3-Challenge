@@ -55,3 +55,16 @@ body {
 #r-squared-location p {
     font-size: 20px;
 }
+
+.color-green {
+    background-color: #5F9586;
+}
+.color-orange {
+    background-color:  #80ADA0;
+}
+.color-yellow {
+    background-color: #FFD166;
+}
+.color-red {
+    background-color: #D57A66;
+}
