@@ -19,28 +19,28 @@ function makeResponsive(repeat_count) {
     var currentWindowHeight = window.innerHeight;
 
     // When window height is reduced
-    if (currentWindowHeight >= 700) {
-        var reduceHeight = 100;
-    }
-    else {
-        var reduceHeight = 600;
-    };
+    // if (currentWindowHeight >= 700) {
+    //     var reduceHeight = 200;
+    // }
+    // else {
+    //     var reduceHeight = 600;
+    // };
 
     // When window width is reduced
     // Greater than 1200
     if (currentWindowWidth >= 1300) {
         var reduceWidth = 350;
-        var reduceHeight = 100;
+        var reduceHeight = 150;
     }
     // Between 1100 and 1300
     else if (currentWindowWidth >= 1100 && currentWindowWidth < 1300) {
         var reduceWidth = 300;
-        var reduceHeight = 100;
+        var reduceHeight = 200;
     }
     // Between 900 and 1100
     else if (currentWindowWidth >= 900 && currentWindowWidth < 1100) {
         var reduceWidth = 250;
-        var reduceHeight = 100;
+        var reduceHeight = 200;
     }
     // Between 700 and 900
     else if (currentWindowWidth >= 700 && currentWindowWidth < 900) {
@@ -614,7 +614,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             if (repeat_count === 0) {
                 var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
 
-                r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+                r_location.append("p").html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
                 repeat_count +=1;
 
                 if (color === "green") {
@@ -722,7 +722,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             if (repeat_count === 0) {
                 var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
 
-                r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+                r_location.append("p").html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
                 repeat_count +=1;
 
                 if (color === "green") {
