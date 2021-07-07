@@ -13,6 +13,9 @@
 ***data:***
 - *data.csv*: csv file containing data provided by Trilogy Education
 
+***images:***
+- This folder contains all screenshots taken of webpage, accessible at this [link](https://juliabrunett.github.io/D3-Challenge/D3_data_journalism/index.html).
+
 *index.html*: main html file
 
 # Main Page:
