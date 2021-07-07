@@ -350,10 +350,6 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .attr("r", 12)
         .classed("stateCircle", true);
 
-    // function findR(censusData, chosenXAxis, chosenYAxis) {
-    //     xSum = 
-    // }
-    
     // CIRCLE LABELS
     // State circle labels
     var circlesLabels = chartGroup.selectAll(".circle-label")
@@ -461,6 +457,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         // updates chart title
         chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
+        // Calculate r-squared value
+        findR(censusData, chosenXAxis, chosenYAxis);
+
       // changes classes to change bold text
         if (chosenXAxis === "healthcare") {
             healthcareTitle
@@ -531,6 +530,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             // updates chart title
             chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
+            // Calculate r-squared value
+            findR(censusData, chosenXAxis, chosenYAxis);
+
             // changes classes to change bold text when new option is selected
             if (chosenYAxis === "poverty") {
                 povertyTitle
@@ -569,6 +571,66 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         });
 
         resizeCircles(circlesGroup, currentWindowWidth);
+
+    // Find r-squared value (correlation)
+    function findR(censusData, chosenXAxis, chosenYAxis) {
+        // initialize variables
+        var xSum = 0;
+        var ySum = 0;
+        var xySum = 0;
+        var xSqSum = 0;
+        var ySqSum = 0;
+        var num = 0;
+        var r;
+        var numerator;
+        var denominator;
+
+        // loop through each data point
+        censusData.forEach(d => {
+
+            // add each value to xSum & ySum
+            xSum +=d[chosenXAxis];
+            ySum +=d[chosenYAxis];
+
+            // multiply x times y & sum values
+            var xTimesY = d[chosenXAxis] * d[chosenYAxis];
+            xySum +=xTimesY;
+
+            // square x & y and sum values
+            var xSquared = Math.pow(d[chosenXAxis], 2);
+            var ySquared = Math.pow(d[chosenYAxis], 2);
+            xSqSum +=xSquared;
+            ySqSum +=ySquared;
+
+            // count how many values
+            num += 1;
+
+        });
+
+        // CHECK NUMBERS
+        // console.log("X SUM", xSum);
+        // console.log("Y SUM", ySum);
+        // console.log("XY Sum", xySum);
+        // console.log("X SQ SUM", xSqSum);
+        // console.log("Y SQ SUM", ySqSum);
+        // console.log("Num", num);
+
+        // Calculate numerator
+        numerator = num * (xySum) - (xSum) * (ySum) 
+        // Calculate denominator
+        denominator = (Math.sqrt(((num * xSqSum) - Math.pow(xSum, 2)) * ((num * ySqSum) - Math.pow(ySum, 2))))
+        
+        // Calculate r
+        r = numerator / denominator;
+        
+        // Print R-Squared value
+        console.log(`${chosenXAxis} vs. ${chosenYAxis}`)
+        console.log("R-Squared", r);
+
+    };
+    
+    // Calculate r-squared value
+    findR(censusData, chosenXAxis, chosenYAxis);
 
 }).catch(function(error) {
     console.log(error);
