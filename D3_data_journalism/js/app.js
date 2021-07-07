@@ -2,18 +2,22 @@
 function makeResponsive() {
     // define the entire plot area
     var plotArea = d3.select("body").select("svg");
-    var textArea = d3.select("body").select("#r-squared-location").selectAll("p").html("");
+    var textArea = d3.select("body").selectAll("svg2");
 
-    console.log(textArea);
+    // console.log(textArea);
 
     // Remove the plot & r-squared text each time the page is re-sized
-    if (!plotArea.empty()) {
-        plotArea.remove();
-    };
+    // if (!plotArea.empty()) {
+    //     plotArea.remove();
+    // };
 
     // if (!textArea.empty()) {
+    //     console.log("I'm not empty");
     //     textArea.remove();
-    // };
+    // }
+    // else {
+    //     console.log("I'm empty");
+    // }
 
     // Define current window width & height
     var currentWindowWidth = window.innerWidth;
@@ -65,313 +69,320 @@ function makeResponsive() {
     // console.log('Height', window.innerHeight);
     // console.log('Width', window.innerWidth);
 
-    // Define margins
-    var margin = {
-        top: 30,
-        right: 50,
-        bottom: 110,
-        left: 130
-    };
+    return [svgWidth, svgHeight];
+};
 
-    // Define widths and heights minus margins for inside of graph
-    var width = svgWidth - margin.left - margin.right;
-    var height = svgHeight - margin.top - margin.bottom;
+var sizeArray = makeResponsive();  
+var svgWidth = sizeArray[0];
+var svgHeight = sizeArray[1];
 
-    // Create an SVG wrapper
-    var svg = d3.select("#scatter-plot")
-        .append("svg")
-        .attr("width", svgWidth)
-        .attr("height", svgHeight);
+// Define margins
+var margin = {
+    top: 30,
+    right: 50,
+    bottom: 110,
+    left: 130
+};
 
-    // Define the chart group
-    var chartGroup = svg.append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+// Define widths and heights minus margins for inside of graph
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
 
-    // Initialize the chosen x-axis: healthcare & y-axis: poverty (default)
-    var chosenXAxis = "healthcare";
-    var chosenYAxis = "poverty";
+// Create an SVG wrapper
+var svg = d3.select("#scatter-plot")
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
 
-    // FUNCTIONS FOR RESPONSIVE GRAPHS
-    // Re-scale x-axis for new chosen variable
-    function xScale(censusData, chosenXAxis) {
+// Define the chart group
+var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-        // re-create scales
-        var xLinearScale = d3.scaleLinear()
-            .domain([d3.min(censusData, d => d[chosenXAxis]) * 0.9,
-                    d3.max(censusData, d => d[chosenXAxis]) * 1.1 ])
-            .range([0, width]);
-        
-        return xLinearScale;
-    };
+// Initialize the chosen x-axis: healthcare & y-axis: poverty (default)
+var chosenXAxis = "healthcare";
+var chosenYAxis = "poverty";
 
-    // Re-scale y-axis for new chosen variable
-    function yScale(censusData, chosenYAxis) {
+// FUNCTIONS FOR RESPONSIVE GRAPHS
+// Re-scale x-axis for new chosen variable
+function xScale(censusData, chosenXAxis) {
 
-        // re-create scales
-        var yLinearScale = d3.scaleLinear()
-            .domain([d3.min(censusData, d => d[chosenYAxis]) * 0.9,
-                    d3.max(censusData, d => d[chosenYAxis]) * 1.1 ])
-            .range([height, 0]);
-        
-        return yLinearScale;
-    };
+    // re-create scales
+    var xLinearScale = d3.scaleLinear()
+        .domain([d3.min(censusData, d => d[chosenXAxis]) * 0.9,
+                d3.max(censusData, d => d[chosenXAxis]) * 1.1 ])
+        .range([0, width]);
+    
+    return xLinearScale;
+};
 
-    // Re-draw new x-axis
-    function updateXAxis(newXScale, xAxis) {
-        // draw bottom axis by new x-scale
-        var bottomAxis = d3.axisBottom(newXScale);
+// Re-scale y-axis for new chosen variable
+function yScale(censusData, chosenYAxis) {
 
-            // cause x-axis to transition & call bottom axis function
-            xAxis.transition()
-            .duration(1000)
-            .call(bottomAxis);
-        
-            return xAxis;
-    };
+    // re-create scales
+    var yLinearScale = d3.scaleLinear()
+        .domain([d3.min(censusData, d => d[chosenYAxis]) * 0.9,
+                d3.max(censusData, d => d[chosenYAxis]) * 1.1 ])
+        .range([height, 0]);
+    
+    return yLinearScale;
+};
 
-    // Re-draw new y-axis
-    function updateYAxis(newYScale, yAxis) {
-        // draw left axis by new y-scale
-        var leftAxis = d3.axisLeft(newYScale);
+// Re-draw new x-axis
+function updateXAxis(newXScale, xAxis) {
+    // draw bottom axis by new x-scale
+    var bottomAxis = d3.axisBottom(newXScale);
 
-            // cause y-axis to transition & call left axis function
-            yAxis.transition()
-            .duration(1000)
-            .call(leftAxis);
-        
-            return yAxis;
-    };
-        
-    // Update circles for x-values
-    function updateXCircles(circlesGroup, newXScale, chosenXAxis) {
+        // cause x-axis to transition & call bottom axis function
+        xAxis.transition()
+        .duration(1000)
+        .call(bottomAxis);
+    
+        return xAxis;
+};
 
-        // transition circles & add new cx attribute based on new x-scale
+// Re-draw new y-axis
+function updateYAxis(newYScale, yAxis) {
+    // draw left axis by new y-scale
+    var leftAxis = d3.axisLeft(newYScale);
+
+        // cause y-axis to transition & call left axis function
+        yAxis.transition()
+        .duration(1000)
+        .call(leftAxis);
+    
+        return yAxis;
+};
+    
+// Update circles for x-values
+function updateXCircles(circlesGroup, newXScale, chosenXAxis) {
+
+    // transition circles & add new cx attribute based on new x-scale
+    circlesGroup.transition()
+        .duration(1000)
+        .attr("cx", d => newXScale(d[chosenXAxis]));
+
+    return circlesGroup;
+};
+
+// Resize circles when page is reduced below 770px
+function resizeCircles(circlesGroup, currentWindowWidth) {
+    if (currentWindowWidth <= 770) {
         circlesGroup.transition()
-            .duration(1000)
-            .attr("cx", d => newXScale(d[chosenXAxis]));
-
-        return circlesGroup;
-    };
-
-    // Resize circles when page is reduced below 770px
-    function resizeCircles(circlesGroup, currentWindowWidth) {
-        if (currentWindowWidth <= 770) {
-            circlesGroup.transition()
-            .duration(5)
-            .attr("r", 7);
-        }
-        else {
-            circlesGroup.transition()
-            .duration(1000)
-            .attr("r", 12);
-        }
-
-        return circlesGroup;
-    };
-
-    // Update circles for y-values
-    function updateYCircles(circlesGroup, newYScale, chosenYAxis) {
-
-        // transition circles & add new cx attribute based on new y-scale
+        .duration(5)
+        .attr("r", 7);
+    }
+    else {
         circlesGroup.transition()
-            .duration(1000)
-            .attr("cy", d => newYScale(d[chosenYAxis]));
+        .duration(1000)
+        .attr("r", 12);
+    }
 
-        return circlesGroup;
+    return circlesGroup;
+};
+
+// Update circles for y-values
+function updateYCircles(circlesGroup, newYScale, chosenYAxis) {
+
+    // transition circles & add new cx attribute based on new y-scale
+    circlesGroup.transition()
+        .duration(1000)
+        .attr("cy", d => newYScale(d[chosenYAxis]));
+
+    return circlesGroup;
+};
+
+// Update circle labels
+function updateXCircleLabels(circlesLabels, newXScale, chosenXAxis) {
+    circlesLabels.transition()
+        .duration(1000)
+        .attr("x", d => newXScale(d[chosenXAxis]));
+
+    return circlesLabels;
+};
+
+// Update circle labels
+function updateYCircleLabels(circlesLabels, newYScale, chosenYAxis) {
+    circlesLabels.transition()
+        .duration(1000)
+        .attr("y", d => newYScale(d[chosenYAxis]) + 3);
+            
+    return circlesLabels;
+};
+
+// Function to update the tooltip
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
+
+    // define the label variables
+    var xLabel;
+    var yLabel;
+
+
+    // change the x-axis labels in tooltip
+    if (chosenXAxis === "healthcare") {
+        xLabel = "Lacks Healthcare:";
+    }
+    else if (chosenXAxis === "smokes") {
+        xLabel = "Smokes:";
+    }
+    else if (chosenXAxis === "obesity") {
+        xLabel = "Obese:";
     };
 
-    // Update circle labels
-    function updateXCircleLabels(circlesLabels, newXScale, chosenXAxis) {
-        circlesLabels.transition()
-            .duration(1000)
-            .attr("x", d => newXScale(d[chosenXAxis]));
-
-        return circlesLabels;
+    // change the y-axis labels in tooltip
+    if (chosenYAxis === "poverty") {
+        yLabel = "In Poverty:";
+    }
+    else if (chosenYAxis === "age") {
+        yLabel = "Age:";
+    }
+    else if (chosenYAxis === "income") {
+        yLabel = "Income:";
     };
 
-    // Update circle labels
-    function updateYCircleLabels(circlesLabels, newYScale, chosenYAxis) {
-        circlesLabels.transition()
-            .duration(1000)
-            .attr("y", d => newYScale(d[chosenYAxis]) + 3);
-                
-        return circlesLabels;
-    };
+    // console.log(xLabel);
+    // console.log(yLabel);
 
-    // Function to update the tooltip
-    function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
-
-        // define the label variables
-        var xLabel;
-        var yLabel;
-
-
-        // change the x-axis labels in tooltip
-        if (chosenXAxis === "healthcare") {
-            xLabel = "Lacks Healthcare:";
-        }
-        else if (chosenXAxis === "smokes") {
-            xLabel = "Smokes:";
-        }
-        else if (chosenXAxis === "obesity") {
-            xLabel = "Obese:";
-        };
-
-        // change the y-axis labels in tooltip
-        if (chosenYAxis === "poverty") {
-            yLabel = "In Poverty:";
-        }
-        else if (chosenYAxis === "age") {
-            yLabel = "Age:";
-        }
-        else if (chosenYAxis === "income") {
-            yLabel = "Income:";
-        };
-
-        // console.log(xLabel);
-        // console.log(yLabel);
-
-        // Draw the tooltip
-        var toolTip = d3.tip()
-            // .data(censusData)
-            .attr("class", "d3-tip")
-            .offset([80, -60])
-            .html(data => {
-                if (chosenYAxis === "poverty") {
-                    return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);
-                }
-                else {
-                    return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}`);
-                };
-            });
-
-        // Call the tooltip function above 
-        circlesGroup.call(toolTip);
-
-        // Event Listeners
-        circlesGroup.on("mouseover", function(data) {
-            toolTip.show(data, this);})
-            .on("mouseout", function(data, index) {
-            toolTip.hide(data); });
-
-        return circlesGroup;
-    };
-
-    // Update the title
-    function updateTitle(chosenXAxis, chosenYAxis) {
-
-        // Define x & y title variables for chart title
-        var xTitle;
-        var yTitle;
-
-        // change the title by x-axis
-        if (chosenXAxis === "healthcare") {
-            xTitle = "% Lacks Healthcare";
-        }
-        else if (chosenXAxis === "smokes") {
-            xTitle = "% Smokes";
-        }
-        else if (chosenXAxis === "obesity") {
-            xTitle = "% Obese";
-        };
-
-        // change the title by y-axis
-        if (chosenYAxis === "poverty") {
-            yTitle = "% in Poverty";
-        }
-        else if (chosenYAxis === "age") {
-            yTitle = "Median Age";
-        }
-        else if (chosenYAxis === "income") {
-            yTitle = "Median Household Income";
-        };
-
-        var chartTitle = chartGroup.selectAll(".chart-title")
-            .text(`${xTitle} vs. ${yTitle} by State`);
-        
-        return chartTitle;
-    };
-
-    // Find r-squared value (correlation)
-    function findR(censusData, chosenXAxis, chosenYAxis) {
-        // initialize variables
-        var xSum = 0;
-        var ySum = 0;
-        var xySum = 0;
-        var xSqSum = 0;
-        var ySqSum = 0;
-        var num = 0;
-        var r;
-        var numerator;
-        var denominator;
-
-        // loop through each data point
-        censusData.forEach(d => {
-
-            // add each value to xSum & ySum
-            xSum +=d[chosenXAxis];
-            ySum +=d[chosenYAxis];
-
-            // multiply x times y & sum values
-            var xTimesY = d[chosenXAxis] * d[chosenYAxis];
-            xySum +=xTimesY;
-
-            // square x & y and sum values
-            var xSquared = Math.pow(d[chosenXAxis], 2);
-            var ySquared = Math.pow(d[chosenYAxis], 2);
-            xSqSum +=xSquared;
-            ySqSum +=ySquared;
-
-            // count how many values
-            num += 1;
-
+    // Draw the tooltip
+    var toolTip = d3.tip()
+        // .data(censusData)
+        .attr("class", "d3-tip")
+        .offset([80, -60])
+        .html(data => {
+            if (chosenYAxis === "poverty") {
+                return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);
+            }
+            else {
+                return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}`);
+            };
         });
 
-        // CHECK NUMBERS
-        // console.log("X SUM", xSum);
-        // console.log("Y SUM", ySum);
-        // console.log("XY Sum", xySum);
-        // console.log("X SQ SUM", xSqSum);
-        // console.log("Y SQ SUM", ySqSum);
-        // console.log("Num", num);
+    // Call the tooltip function above 
+    circlesGroup.call(toolTip);
 
-        // Calculate numerator
-        numerator = num * (xySum) - (xSum) * (ySum) 
-        // Calculate denominator
-        denominator = (Math.sqrt(((num * xSqSum) - Math.pow(xSum, 2)) * ((num * ySqSum) - Math.pow(ySum, 2))))
-        
-        // Calculate r
-        r = numerator / denominator;
-        
-        // Print R-Squared value
-        console.log(`${chosenXAxis} vs. ${chosenYAxis}`)
-        console.log("R-Squared", r);
+    // Event Listeners
+    circlesGroup.on("mouseover", function(data) {
+        toolTip.show(data, this);})
+        .on("mouseout", function(data, index) {
+        toolTip.hide(data); });
 
-        // return r rounded to 3 decimals
-        return r.toFixed(3);
+    return circlesGroup;
+};
 
+// Update the title
+function updateTitle(chosenXAxis, chosenYAxis) {
+
+    // Define x & y title variables for chart title
+    var xTitle;
+    var yTitle;
+
+    // change the title by x-axis
+    if (chosenXAxis === "healthcare") {
+        xTitle = "% Lacks Healthcare";
+    }
+    else if (chosenXAxis === "smokes") {
+        xTitle = "% Smokes";
+    }
+    else if (chosenXAxis === "obesity") {
+        xTitle = "% Obese";
     };
 
-    // Update r-squared text
-    function updateRSquared(censusData, chosenXAxis, chosenYAxis) {
-        // calculate new r-squared value
-        var r_value = findR(censusData, chosenXAxis, chosenYAxis);
-
-        if (Math.abs(r_value) > 0.7) {
-            r_strength = "Strong";
-        }
-        else if (Math.abs(r_value) > 0.5 && Math.abs(r_value) <= 0.7) {
-            r_strength = "Moderate";
-        }
-        else if (Math.abs(r_value) > 0.3 && Math.abs(r_value) <= 0.5) {
-            r_strength = "Weak"
-        }
-        else {
-            r_strength = "No correlation"
-        }
-        // Append new r-squared value
-        return (`R-Squared: ${r_value}<br>Strength: ${r_strength}`);
+    // change the title by y-axis
+    if (chosenYAxis === "poverty") {
+        yTitle = "% in Poverty";
+    }
+    else if (chosenYAxis === "age") {
+        yTitle = "Median Age";
+    }
+    else if (chosenYAxis === "income") {
+        yTitle = "Median Household Income";
     };
+
+    var chartTitle = chartGroup.selectAll(".chart-title")
+        .text(`${xTitle} vs. ${yTitle} by State`);
+    
+    return chartTitle;
+};
+
+// Find r-squared value (correlation)
+function findR(censusData, chosenXAxis, chosenYAxis) {
+    // initialize variables
+    var xSum = 0;
+    var ySum = 0;
+    var xySum = 0;
+    var xSqSum = 0;
+    var ySqSum = 0;
+    var num = 0;
+    var r;
+    var numerator;
+    var denominator;
+
+    // loop through each data point
+    censusData.forEach(d => {
+
+        // add each value to xSum & ySum
+        xSum +=d[chosenXAxis];
+        ySum +=d[chosenYAxis];
+
+        // multiply x times y & sum values
+        var xTimesY = d[chosenXAxis] * d[chosenYAxis];
+        xySum +=xTimesY;
+
+        // square x & y and sum values
+        var xSquared = Math.pow(d[chosenXAxis], 2);
+        var ySquared = Math.pow(d[chosenYAxis], 2);
+        xSqSum +=xSquared;
+        ySqSum +=ySquared;
+
+        // count how many values
+        num += 1;
+
+    });
+
+    // CHECK NUMBERS
+    // console.log("X SUM", xSum);
+    // console.log("Y SUM", ySum);
+    // console.log("XY Sum", xySum);
+    // console.log("X SQ SUM", xSqSum);
+    // console.log("Y SQ SUM", ySqSum);
+    // console.log("Num", num);
+
+    // Calculate numerator
+    numerator = num * (xySum) - (xSum) * (ySum) 
+    // Calculate denominator
+    denominator = (Math.sqrt(((num * xSqSum) - Math.pow(xSum, 2)) * ((num * ySqSum) - Math.pow(ySum, 2))))
+    
+    // Calculate r
+    r = numerator / denominator;
+    
+    // Print R-Squared value
+    console.log(`${chosenXAxis} vs. ${chosenYAxis}`)
+    console.log("R-Squared", r);
+
+    // return r rounded to 3 decimals
+    return r.toFixed(3);
+
+};
+
+// Update r-squared text
+function updateRSquared(censusData, chosenXAxis, chosenYAxis) {
+    // calculate new r-squared value
+    var r_value = findR(censusData, chosenXAxis, chosenYAxis);
+
+    if (Math.abs(r_value) > 0.7) {
+        r_strength = "Strong";
+    }
+    else if (Math.abs(r_value) > 0.5 && Math.abs(r_value) <= 0.7) {
+        r_strength = "Moderate";
+    }
+    else if (Math.abs(r_value) > 0.3 && Math.abs(r_value) <= 0.5) {
+        r_strength = "Weak"
+    }
+    else {
+        r_strength = "No correlation"
+    }
+    // Append new r-squared value
+    return (`R-Squared: ${r_value}<br>Strength: ${r_strength}`);
+};
 
 // Import data from csv
 d3.csv("./data/data.csv").then((censusData, err) => {
@@ -667,7 +678,9 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             };
         });
 
-        resizeCircles(circlesGroup, currentWindowWidth);
+        // var currentWindowWidth = responsiveArray[3];
+
+        resizeCircles(circlesGroup, window.innerWidth);
 
     // Calculate r-squared value (in console)
     findR(censusData, chosenXAxis, chosenYAxis);
@@ -675,7 +688,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 }).catch(function(error) {
     console.log(error);
 });
-};
+// };
 
 makeResponsive();
 
