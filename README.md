@@ -3,6 +3,8 @@
 
 ***D3_data_journalism:***
 
+*index.html*: main html file
+
 **css:**
 - *d3styles.css*: CSS file containing the d3 specific styles
 - *styles.css*: CSS file containing the main css code
@@ -15,8 +17,6 @@
 
 ***images:***
 - This folder contains all screenshots taken of webpage, accessible at this [link](https://juliabrunett.github.io/D3-Challenge/D3_data_journalism/index.html).
-
-*index.html*: main html file
 
 # Main Page:
 ![Main Page Screenshot](D3_data_journalism/images/main_page.png)
