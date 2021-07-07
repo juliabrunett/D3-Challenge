@@ -1,58 +1,59 @@
 // Function to make whole page responsive to re-sizing
-function makeResponsive() {
+function makeResponsive(repeat_count) {
+
     // define the entire plot area
     var plotArea = d3.select("body").select("svg");
-    var textArea = d3.select("body").selectAll("svg2");
+    // var textArea = d3.select("body").selectAll("svg2");
 
     // console.log(textArea);
 
     // Remove the plot & r-squared text each time the page is re-sized
-    // if (!plotArea.empty()) {
-    //     plotArea.remove();
-    // };
+    if (!plotArea.empty()) {
+        plotArea.remove();
+    };
 
-    // if (!textArea.empty()) {
-    //     console.log("I'm not empty");
-    //     textArea.remove();
-    // }
-    // else {
-    //     console.log("I'm empty");
-    // }
+    
 
     // Define current window width & height
     var currentWindowWidth = window.innerWidth;
     var currentWindowHeight = window.innerHeight;
 
     // When window height is reduced
-    if (currentWindowHeight >= 1000) {
-        var reduceHeight = 200;
+    if (currentWindowHeight >= 700) {
+        var reduceHeight = 100;
     }
     else {
         var reduceHeight = 100;
     };
 
     // When window width is reduced
-    if (currentWindowWidth >= 1300) {
+    // Greater than 1200
+    if (currentWindowWidth >= 1200) {
         var reduceWidth = 350;
-        var reduceHeight = 200;
+        var reduceHeight = 100;
     }
-    else if (currentWindowWidth >= 1100 && currentWindowWidth <= 1299) {
+    // Between 1100 and 1200
+    else if (currentWindowWidth >= 1100 && currentWindowWidth < 1200) {
+        var reduceWidth = 400;
+        var reduceHeight = 100;
+    }
+    // Between 900 and 1100
+    else if (currentWindowWidth >= 900 && currentWindowWidth < 1100) {
         var reduceWidth = 300;
-        var reduceHeight = 200;
+        var reduceHeight = 0;
     }
-    else if (currentWindowWidth >= 900 && currentWindowWidth <= 1099) {
-        var reduceWidth = 250;
-        var reduceHeight = 200;
-    }
-    else if (currentWindowWidth >= 700 && currentWindowWidth <= 899) {
+    // Between 700 and 900
+    else if (currentWindowWidth >= 700 && currentWindowWidth < 900) {
         var reduceWidth = 200;
         var reduceHeight = 200;
     }
-    else if (currentWindowWidth >= 500 && currentWindowWidth <= 699) {
+    // Between 500 and 700
+    else if (currentWindowWidth >= 500 && currentWindowWidth < 700) {
         var reduceWidth = 150;
         var reduceHeight = 200;
     }
-    else if (currentWindowWidth >= 300 && currentWindowWidth <= 499) {
+    // Between 300 and 500
+    else if (currentWindowWidth >= 300 && currentWindowWidth < 500) {
         var reduceWidth = 100;
         var reduceHeight = 200;
     }
@@ -66,15 +67,15 @@ function makeResponsive() {
     var svgWidth = window.innerWidth - reduceWidth;
     var svgHeight = window.innerHeight - reduceHeight;
 
-    // console.log('Height', window.innerHeight);
-    // console.log('Width', window.innerWidth);
+    console.log('Height', window.innerHeight);
+    console.log('Width', window.innerWidth);
 
-    return [svgWidth, svgHeight];
-};
+    // return [svgWidth, svgHeight];
+// };
 
-var sizeArray = makeResponsive();  
-var svgWidth = sizeArray[0];
-var svgHeight = sizeArray[1];
+// var sizeArray = makeResponsive();  
+// var svgWidth = sizeArray[0];
+// var svgHeight = sizeArray[1];
 
 // Define margins
 var margin = {
@@ -524,11 +525,14 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
     // Append r-squared on page
-    var r_location = d3.select("#r-squared-location").append("p");
-    // r_location.text("");
+    var r_location = d3.select("#r-squared-location").append("p").classed("r-value", true);
+
     // Initialize page with r-squared
-    // r_location.text(`R-Squared: ${findR(censusData, chosenXAxis, chosenYAxis)}`);
-    r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+    if (repeat_count === 0) {
+        r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+        repeat_count +=1;
+    };
+
 
     // UPDATE GRAPH WITH NEW X SELECTION
     xTitlesGroup.selectAll("text")
@@ -540,68 +544,75 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         // If the value chosen is not already selected
         if (xValue !== chosenXAxis) {
 
+            var repeat_count = 0;
             // re-set chosen x-axis
             chosenXAxis = xValue;
             console.log("New X-Axis:", chosenXAxis);
 
-        // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
-        // updates x scale for new data
-        xLinearScale = xScale(censusData, chosenXAxis);
+            // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
+            // updates x scale for new data
+            xLinearScale = xScale(censusData, chosenXAxis);
 
-        // updates x axis with transition
-        xAxis = updateXAxis(xLinearScale, xAxis);
+            // updates x axis with transition
+            xAxis = updateXAxis(xLinearScale, xAxis);
 
-        // updates circles with new x values
-        circlesGroup = updateXCircles(circlesGroup, xLinearScale, chosenXAxis);
+            // updates circles with new x values
+            circlesGroup = updateXCircles(circlesGroup, xLinearScale, chosenXAxis);
 
-        // updates tooltips with new info
-        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+            // updates tooltips with new info
+            circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
-        // updates x-labels on circles
-        circlesLabels = updateXCircleLabels(circlesLabels, xLinearScale, chosenXAxis);
+            // updates x-labels on circles
+            circlesLabels = updateXCircleLabels(circlesLabels, xLinearScale, chosenXAxis);
 
-        // updates chart title
-        chartTitle = updateTitle(chosenXAxis, chosenYAxis);
+            // updates chart title
+            chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
-        // Calculate r-squared value
-        // findR(censusData, chosenXAxis, chosenYAxis);
-        r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+            // Calculate r-squared value
+            // findR(censusData, chosenXAxis, chosenYAxis);
+            // r_location.html("");
+            // r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
 
-      // changes classes to change bold text
-        if (chosenXAxis === "healthcare") {
-            healthcareTitle
-            .classed("active", true)
-            .classed("inactive", false);
-            smokesTitle
-            .classed("active", false)
-            .classed("inactive", true);
-            obesityTitle
-            .classed("active", false)
-            .classed("inactive", true);
-        }
-        else if (chosenXAxis === "smokes") {
-            healthcareTitle
-            .classed("active", false)
-            .classed("inactive", true);
-            smokesTitle
-            .classed("active", true)
-            .classed("inactive", false);
-            obesityTitle
-            .classed("active", false)
-            .classed("inactive", true);
-        }
-        else if (chosenXAxis === "obesity") {
-            healthcareTitle
-            .classed("active", false)
-            .classed("inactive", true);
-            smokesTitle
-            .classed("active", false)
-            .classed("inactive", true);
-            obesityTitle
-            .classed("active", true)
-            .classed("inactive", false);
-        };
-        };
+            if (repeat_count === 0) {
+                r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+                repeat_count +=1;
+            };
+
+            // changes classes to change bold text
+            if (chosenXAxis === "healthcare") {
+                healthcareTitle
+                .classed("active", true)
+                .classed("inactive", false);
+                smokesTitle
+                .classed("active", false)
+                .classed("inactive", true);
+                obesityTitle
+                .classed("active", false)
+                .classed("inactive", true);
+            }
+            else if (chosenXAxis === "smokes") {
+                healthcareTitle
+                .classed("active", false)
+                .classed("inactive", true);
+                smokesTitle
+                .classed("active", true)
+                .classed("inactive", false);
+                obesityTitle
+                .classed("active", false)
+                .classed("inactive", true);
+            }
+            else if (chosenXAxis === "obesity") {
+                healthcareTitle
+                .classed("active", false)
+                .classed("inactive", true);
+                smokesTitle
+                .classed("active", false)
+                .classed("inactive", true);
+                obesityTitle
+                .classed("active", true)
+                .classed("inactive", false);
+            };
+            };
     });
     
     // UPDATE GRAPH WITH NEW Y SELECTION
@@ -614,6 +625,8 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         // If the value chosen is not already selected
         if (yValue !== chosenYAxis) {
 
+            var repeat_count = 0;
+            
             // re-set chosen y-axis
             chosenYAxis = yValue;
             console.log("New Y-Axis:", chosenYAxis);
@@ -639,7 +652,13 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 
             // Calculate r-squared value
             // findR(censusData, chosenXAxis, chosenYAxis);
-            r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+            // r_location.html("");
+            // r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+
+            if (repeat_count === 0) {
+                r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+                repeat_count +=1;
+            };
             
             // changes classes to change bold text when new option is selected
             if (chosenYAxis === "poverty") {
@@ -688,9 +707,12 @@ d3.csv("./data/data.csv").then((censusData, err) => {
 }).catch(function(error) {
     console.log(error);
 });
-// };
+};
 
-makeResponsive();
+// Define repeat count to avoid appending duplicate r-values
+var repeat_count = 0;
+// call the responsive function (pass in the repeat count)
+makeResponsive(repeat_count);
 
 // Responsive window function
 d3.select(window).on("resize", makeResponsive);
