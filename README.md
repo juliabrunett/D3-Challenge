@@ -15,4 +15,9 @@
 *index.html*: main html file
 
 # Main Functionality:
-![Main Page Screenshot](D3_data_journalism/images/main_page.jpg)
+![Main Page Screenshot](D3_data_journalism/images/main_page.png)
+
+# Example Scatter Plots:
+![Healthcare vs. Poverty](D3_data_journalism/images/healthcare_poverty.png)
+
+![Smokes vs. Income](D3_data_journalism/images/smokes_income.png)
