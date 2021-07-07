@@ -14,7 +14,7 @@
 
 *index.html*: main html file
 
-# Main Functionality:
+# Main Page:
 ![Main Page Screenshot](D3_data_journalism/images/main_page.png)
 
 # Example Scatter Plots:
