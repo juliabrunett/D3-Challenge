@@ -15,6 +15,7 @@ body {
     color: white;
     margin-bottom: 0px;
     border-radius: 0px;
+    padding: 40px;
 }
 
 /* Jumbotron heading */
@@ -33,6 +34,11 @@ body {
     width: 80%;
 }
 
+#sub-title h3 {
+    font-size: 30px;
+    color: #27313F;
+}
+
 /* Article Location */
 #article-location {
     margin-top: 20px;
@@ -47,7 +53,6 @@ body {
 /* R-squared location */
 #r-squared-location {
     margin-top: 30px;
-    background: white;
     text-align: center;
 }
 

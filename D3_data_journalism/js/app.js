@@ -23,24 +23,24 @@ function makeResponsive(repeat_count) {
         var reduceHeight = 100;
     }
     else {
-        var reduceHeight = 100;
+        var reduceHeight = 600;
     };
 
     // When window width is reduced
     // Greater than 1200
-    if (currentWindowWidth >= 1200) {
+    if (currentWindowWidth >= 1300) {
         var reduceWidth = 350;
         var reduceHeight = 100;
     }
-    // Between 1100 and 1200
-    else if (currentWindowWidth >= 1100 && currentWindowWidth < 1200) {
-        var reduceWidth = 400;
+    // Between 1100 and 1300
+    else if (currentWindowWidth >= 1100 && currentWindowWidth < 1300) {
+        var reduceWidth = 300;
         var reduceHeight = 100;
     }
     // Between 900 and 1100
     else if (currentWindowWidth >= 900 && currentWindowWidth < 1100) {
-        var reduceWidth = 300;
-        var reduceHeight = 0;
+        var reduceWidth = 250;
+        var reduceHeight = 100;
     }
     // Between 700 and 900
     else if (currentWindowWidth >= 700 && currentWindowWidth < 900) {
@@ -55,7 +55,7 @@ function makeResponsive(repeat_count) {
     // Between 300 and 500
     else if (currentWindowWidth >= 300 && currentWindowWidth < 500) {
         var reduceWidth = 100;
-        var reduceHeight = 200;
+        var reduceHeight = 500;
     }
     else {
         var reduceWidth = 50;
@@ -67,15 +67,8 @@ function makeResponsive(repeat_count) {
     var svgWidth = window.innerWidth - reduceWidth;
     var svgHeight = window.innerHeight - reduceHeight;
 
-    console.log('Height', window.innerHeight);
-    console.log('Width', window.innerWidth);
-
-    // return [svgWidth, svgHeight];
-// };
-
-// var sizeArray = makeResponsive();  
-// var svgWidth = sizeArray[0];
-// var svgHeight = sizeArray[1];
+    // console.log('Height', window.innerHeight);
+    // console.log('Width', window.innerWidth);
 
 // Define margins
 var margin = {
@@ -356,8 +349,8 @@ function findR(censusData, chosenXAxis, chosenYAxis) {
     r = numerator / denominator;
     
     // Print R-Squared value
-    console.log(`${chosenXAxis} vs. ${chosenYAxis}`)
-    console.log("R-Squared", r);
+    // console.log(`${chosenXAxis} vs. ${chosenYAxis}`)
+    // console.log("R-Squared", r);
 
     // return r rounded to 3 decimals
     return r.toFixed(3);
@@ -544,12 +537,12 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
     // Append r-squared on page
-    var r_location = d3.select("#r-squared-location").append("p");
+    var r_location = d3.select("#r-squared-location");
     var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
 
     // Initialize page with r-squared
     if (repeat_count === 0) {
-        r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
+        r_location.append("p").html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
         
         if (color === "green") {
             r_location.classed("color-green", true);
@@ -592,9 +585,11 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         if (xValue !== chosenXAxis) {
 
             var repeat_count = 0;
+            r_location.html("");
+
             // re-set chosen x-axis
             chosenXAxis = xValue;
-            console.log("New X-Axis:", chosenXAxis);
+            // console.log("New X-Axis:", chosenXAxis);
 
             // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
             // updates x scale for new data
@@ -696,11 +691,13 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         // If the value chosen is not already selected
         if (yValue !== chosenYAxis) {
 
+
             var repeat_count = 0;
+            r_location.html("");
 
             // re-set chosen y-axis
             chosenYAxis = yValue;
-            console.log("New Y-Axis:", chosenYAxis);
+            // console.log("New Y-Axis:", chosenYAxis);
 
             // CHANGE GRAPH WITH NEW CHOSEN VARIABLES
             // updates x scale for new data
@@ -724,7 +721,7 @@ d3.csv("./data/data.csv").then((censusData, err) => {
             // Calculate r-squared value
             if (repeat_count === 0) {
                 var color = colorRSquared(censusData, chosenXAxis, chosenYAxis);
-                
+
                 r_location.html(updateRSquared(censusData, chosenXAxis, chosenYAxis));
                 repeat_count +=1;
 
