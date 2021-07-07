@@ -240,7 +240,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     var toolTip = d3.tip()
         // .data(censusData)
         .attr("class", "d3-tip")
-        .offset([80, -60])
+        .offset([80, -75])
         .html(data => {
             if (chosenYAxis === "poverty") {
                 return (`${data.state}<br>${xLabel} ${data[chosenXAxis]}%<br>${yLabel} ${data[chosenYAxis]}%`);

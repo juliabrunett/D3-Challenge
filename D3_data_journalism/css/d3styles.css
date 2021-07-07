@@ -38,14 +38,23 @@
 /* State circles */
 .stateCircle {
     fill: #415a77;
-    stroke: #1b263b;
     opacity: 1;
 }
 
-/* .chart {
-    display: block;
-    margin: 0;
-} */
+/* cirlces when hovered */
+.stateCircle:hover {
+    fill: #778da9;
+    stroke: black;
+    opacity: 1;
+}
+
+/* state text when hovered */
+.stateText:hover {
+    font-family: sans-serif;
+    fill: white;
+    text-anchor: middle;
+    font-size: 11px;
+}
 
 /* Tooltip */
 .d3-tip {
