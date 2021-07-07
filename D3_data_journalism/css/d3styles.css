@@ -38,7 +38,7 @@
 /* State circles */
 .stateCircle {
     fill: #415a77;
-    opacity: 1;
+    opacity: 0.85;
 }
 
 /* cirlces when hovered */
