@@ -156,7 +156,7 @@ function makeResponsive() {
         else {
             circlesGroup.transition()
             .duration(1000)
-            .attr("r", 11);
+            .attr("r", 12);
         }
 
         return circlesGroup;
@@ -187,7 +187,7 @@ function makeResponsive() {
         circlesLabels.transition()
             .duration(1000)
             .attr("y", d => newYScale(d[chosenYAxis]) + 3);
-
+                
         return circlesLabels;
     };
 
@@ -201,30 +201,24 @@ function makeResponsive() {
 
         // change the x-axis labels in tooltip
         if (chosenXAxis === "healthcare") {
-            xLabel = "Healthcare:";
-            xTitle = "% Lacks Healthcare";
+            xLabel = "Lacks Healthcare:";
         }
         else if (chosenXAxis === "smokes") {
             xLabel = "Smokes:";
-            xTitle = "% Lacks Healthcare";
         }
         else if (chosenXAxis === "obesity") {
-            xLabel = "Obesity:";
-            xTitle = "% Obese";
+            xLabel = "Obese:";
         };
 
         // change the y-axis labels in tooltip
         if (chosenYAxis === "poverty") {
-            yLabel = "Poverty:";
-            xTitle = "% in Poverty";
+            yLabel = "In Poverty:";
         }
         else if (chosenYAxis === "age") {
             yLabel = "Age:";
-            xTitle = "Median Age";
         }
         else if (chosenYAxis === "income") {
             yLabel = "Income:";
-            yTitle = "Median Household Income";
         };
 
         // console.log(xLabel);
@@ -353,9 +347,13 @@ d3.csv("./data/data.csv").then((censusData, err) => {
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 11)
+        .attr("r", 12)
         .classed("stateCircle", true);
 
+    // function findR(censusData, chosenXAxis, chosenYAxis) {
+    //     xSum = 
+    // }
+    
     // CIRCLE LABELS
     // State circle labels
     var circlesLabels = chartGroup.selectAll(".circle-label")
