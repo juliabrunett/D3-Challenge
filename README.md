@@ -21,3 +21,6 @@
 ![Healthcare vs. Poverty](D3_data_journalism/images/healthcare_poverty.png)
 
 ![Smokes vs. Income](D3_data_journalism/images/smokes_income.png)
+
+# Analysis:
+![Article Analysis](D3_data_journalism/images/article.png)
