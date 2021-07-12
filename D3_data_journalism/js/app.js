@@ -90,7 +90,8 @@ var svg = d3.select("#scatter-plot")
 
 // Define the chart group
 var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .classed("chart-group", true);
 
 // Initialize the chosen x-axis: healthcare & y-axis: poverty (default)
 var chosenXAxis = "healthcare";
@@ -453,25 +454,31 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
     // Define circles group
-    var circlesGroup = chartGroup.selectAll("circle")
+    var circlesGroup = chartGroup.append("g")
+        .classed("circlesGroup", true)
+        .selectAll("circle")
         .data(censusData)
         .enter()
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 12)
-        .classed("stateCircle", true);
+        .classed("stateCircle", true)
+        .attr("value", d => d.abbr);
 
     // CIRCLE LABELS
     // State circle labels
-    var circlesLabels = chartGroup.selectAll(".circle-label")
+    var circlesLabels = chartGroup.append("g")
+        .classed("labelGroup", true)
+        .selectAll(".circle-label")
         .data(censusData)
         .enter()
         .append("text")
         .text(d => d.abbr)
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis]) + 3)
-        .classed("stateText circle-label", true);
+        .classed("stateText circle-label", true)
+        .attr("value", d => d.abbr);
     
     // X & Y AXIS TITLES
     // Y TITLES
@@ -808,3 +815,38 @@ makeResponsive(repeat_count);
 
 // Responsive window function
 d3.select(window).on("resize", makeResponsive);
+
+d3.csv("./data/data.csv").then((censusData) => {
+    var states = censusData.map(d => d.abbr);
+    console.log(states);
+
+    // DROPDOWN MENU
+    // Select the dropdown menu
+    var dropdownMenu = d3.select("#dropdown-menu>#selID");
+    
+    // Loop through ids and create options in dropdown menu
+    for (var x = 0; x < states.length; x++) {
+        var option = dropdownMenu.append("option");
+        option.text(states[x]).attr("value", `${states[x]}`);
+    };
+
+    dropdownMenu.on("change", findState);
+
+    function findState() {
+        var state = dropdownMenu.node().value;
+        console.log(state);
+    }
+
+//     var labelGroup = d3.select(".labelGroup");
+//     var labels = [];
+    
+
+//     console.log(labelGroup.selectAll("text").node());
+
+//     // for (var i = 0; i < states.length; i++) {
+//     //     var labels = labelGroup.selectAll("text").node();
+//     //     console.log(labels);
+//     // }
+    
+
+});
