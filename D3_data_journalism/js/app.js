@@ -12,8 +12,6 @@ function makeResponsive(repeat_count) {
         plotArea.remove();
     };
 
-    
-
     // Define current window width & height
     var currentWindowWidth = window.innerWidth;
     var currentWindowHeight = window.innerHeight;
@@ -256,13 +254,25 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
     // Event Listeners
     circlesGroup.on("mouseover", function(data) {
-        toolTip.show(data, this);})
+        // Show tooltip
+        toolTip.show(data, this);
+        // Expand circle
+        d3.select(this)
+            .transition()
+            .attr('r', 20);
+        })
         .on("mouseout", function(data, index) {
-        toolTip.hide(data); });
+        // Hide tooltip
+        toolTip.hide(data); 
+        // Shrink circle
+        d3.select(this)
+        .transition()
+        .attr('r', 12);
+    });
+
 
     return circlesGroup;
 };
-
 // Update the title
 function updateTitle(chosenXAxis, chosenYAxis) {
 
@@ -815,38 +825,3 @@ makeResponsive(repeat_count);
 
 // Responsive window function
 d3.select(window).on("resize", makeResponsive);
-
-d3.csv("./data/data.csv").then((censusData) => {
-    var states = censusData.map(d => d.abbr);
-    console.log(states);
-
-    // DROPDOWN MENU
-    // Select the dropdown menu
-    var dropdownMenu = d3.select("#dropdown-menu>#selID");
-    
-    // Loop through ids and create options in dropdown menu
-    for (var x = 0; x < states.length; x++) {
-        var option = dropdownMenu.append("option");
-        option.text(states[x]).attr("value", `${states[x]}`);
-    };
-
-    dropdownMenu.on("change", findState);
-
-    function findState() {
-        var state = dropdownMenu.node().value;
-        console.log(state);
-    }
-
-//     var labelGroup = d3.select(".labelGroup");
-//     var labels = [];
-    
-
-//     console.log(labelGroup.selectAll("text").node());
-
-//     // for (var i = 0; i < states.length; i++) {
-//     //     var labels = labelGroup.selectAll("text").node();
-//     //     console.log(labels);
-//     // }
-    
-
-});

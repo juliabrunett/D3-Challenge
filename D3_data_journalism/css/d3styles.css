@@ -1,6 +1,6 @@
 /* x & y-axis titles */
 .axisText {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Cambria';
     font-size: 16px;
     text-anchor: middle;
 }
@@ -73,11 +73,10 @@
 .chart-title {
     text-anchor: middle;  
     font-size: 20px;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Cambria';
     text-transform: capitalize;
     font-weight: bold;
 }
-
 
 /* Media Rules for shrinking page */
 @media screen and (max-width: 770px) {
