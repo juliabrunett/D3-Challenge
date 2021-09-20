@@ -5,8 +5,9 @@
 
 /* Body */
 body {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    background-color: #F7F8F2;
+    font-family: 'Cambria', Georgia, serif;
+    /* background-color: rgb(245, 245, 245); */
+    background-color: rgb(235, 235, 235)
 }
 
 /* Jumbotron */

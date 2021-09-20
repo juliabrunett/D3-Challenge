@@ -12,8 +12,6 @@ function makeResponsive(repeat_count) {
         plotArea.remove();
     };
 
-    
-
     // Define current window width & height
     var currentWindowWidth = window.innerWidth;
     var currentWindowHeight = window.innerHeight;
@@ -90,7 +88,8 @@ var svg = d3.select("#scatter-plot")
 
 // Define the chart group
 var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .classed("chart-group", true);
 
 // Initialize the chosen x-axis: healthcare & y-axis: poverty (default)
 var chosenXAxis = "healthcare";
@@ -255,13 +254,25 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
     // Event Listeners
     circlesGroup.on("mouseover", function(data) {
-        toolTip.show(data, this);})
+        // Show tooltip
+        toolTip.show(data, this);
+        // Expand circle
+        d3.select(this)
+            .transition()
+            .attr('r', 20);
+        })
         .on("mouseout", function(data, index) {
-        toolTip.hide(data); });
+        // Hide tooltip
+        toolTip.hide(data); 
+        // Shrink circle
+        d3.select(this)
+        .transition()
+        .attr('r', 12);
+    });
+
 
     return circlesGroup;
 };
-
 // Update the title
 function updateTitle(chosenXAxis, chosenYAxis) {
 
@@ -453,25 +464,31 @@ d3.csv("./data/data.csv").then((censusData, err) => {
     chartTitle = updateTitle(chosenXAxis, chosenYAxis);
 
     // Define circles group
-    var circlesGroup = chartGroup.selectAll("circle")
+    var circlesGroup = chartGroup.append("g")
+        .classed("circlesGroup", true)
+        .selectAll("circle")
         .data(censusData)
         .enter()
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 12)
-        .classed("stateCircle", true);
+        .classed("stateCircle", true)
+        .attr("value", d => d.abbr);
 
     // CIRCLE LABELS
     // State circle labels
-    var circlesLabels = chartGroup.selectAll(".circle-label")
+    var circlesLabels = chartGroup.append("g")
+        .classed("labelGroup", true)
+        .selectAll(".circle-label")
         .data(censusData)
         .enter()
         .append("text")
         .text(d => d.abbr)
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis]) + 3)
-        .classed("stateText circle-label", true);
+        .classed("stateText circle-label", true)
+        .attr("value", d => d.abbr);
     
     // X & Y AXIS TITLES
     // Y TITLES
